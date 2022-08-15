@@ -1,11 +1,117 @@
 package io.github.oreeeee.flmorse
 
+import android.content.Context
+import android.hardware.camera2.CameraManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.SystemClock
+import android.util.Log
+import android.widget.Button
+import android.widget.EditText
+import androidx.annotation.RequiresApi
+import kotlinx.coroutines.delay
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var cameraManager: CameraManager
+    private lateinit var cameraId: String
+    private lateinit var etUserText: EditText
+    private lateinit var btnFlash: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        etUserText = findViewById(R.id.etUserText)
+        btnFlash = findViewById(R.id.btnFlash)
+
+        // Initialize flashlight
+        cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        cameraId = cameraManager.cameraIdList[0]
+
+        //cameraManager.setTorchMode(cameraId, true)
+
+        btnFlash.setOnClickListener {
+            flashMorse(convertTextToMorse(etUserText.text.toString()))
+        }
+    }
+
+    private fun convertTextToMorse(textToConvert: String): String {
+        var stringInMorse = ""
+        val textToConvert: String = textToConvert.lowercase()
+
+        textToConvert.forEach { character ->
+            // Long when statement incoming!
+            when(character) {
+                // Letters
+                'a' -> stringInMorse + ".-"
+                'b' -> stringInMorse + "-..."
+                'c' -> stringInMorse + "-.-."
+                'd' -> stringInMorse + "-.."
+                'e' -> stringInMorse + "."
+                'f' -> stringInMorse + "..-."
+                'g' -> stringInMorse + "--."
+                'h' -> stringInMorse + "...."
+                'i' -> stringInMorse + ".."
+                'j' -> stringInMorse + ".---"
+                'k' -> stringInMorse + "-.-"
+                'l' -> stringInMorse + ".-.."
+                'm' -> stringInMorse + "--"
+                'n' -> stringInMorse + "-."
+                'o' -> stringInMorse + "---"
+                'p' -> stringInMorse + ".--."
+                'q' -> stringInMorse + "--.-"
+                'r' -> stringInMorse + ".-."
+                's' -> stringInMorse + "..."
+                't' -> stringInMorse + "-"
+                'u' -> stringInMorse + "..-"
+                'v' -> stringInMorse + "...-"
+                'w' -> stringInMorse + ".--"
+                'x' -> stringInMorse + "-..-"
+                'y' -> stringInMorse + "-.--"
+                'z' -> stringInMorse + "--.."
+
+                // Numbers
+                '1' -> stringInMorse + ".----"
+                '2' -> stringInMorse + "..---"
+                '3' -> stringInMorse + "...--"
+                '4' -> stringInMorse + "....-"
+                '5' -> stringInMorse + "....."
+                '6' -> stringInMorse + "-...."
+                '7' -> stringInMorse + "--..."
+                '8' -> stringInMorse + "---.."
+                '9' -> stringInMorse + "----."
+                '0' -> stringInMorse + "-----"
+
+                ' ' -> stringInMorse + " "
+
+                else -> Log.i("MainActivity", "Unsupported character given, skipping... TODO: Replace this with some kind of popup.")
+
+                // I wrote everything by hand in here from a Wikipedia article
+            }
+        }
+
+        Log.i("MainActivity", "Morse: $stringInMorse")
+
+        return stringInMorse
+    }
+
+    private fun flashMorse(stringToMorse: String) {
+        stringToMorse.forEach { character ->
+            when(character) {
+                '.' -> {
+                    cameraManager.setTorchMode(cameraId, true)
+                    SystemClock.sleep(50)
+                    cameraManager.setTorchMode(cameraId, false)
+                }
+                '-' -> {
+                    cameraManager.setTorchMode(cameraId, true)
+                    SystemClock.sleep(150)
+                    cameraManager.setTorchMode(cameraId, false)
+                }
+                ' ' -> SystemClock.sleep(50)
+            }
+        }
+
     }
 }
