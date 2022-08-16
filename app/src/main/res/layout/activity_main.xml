@@ -13,7 +13,7 @@
         android:layout_marginTop="-10dp"
         android:ems="15"
         android:hint="What should the morse code be?"
-        android:inputType="textPersonName"
+        android:inputType="textFilter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
