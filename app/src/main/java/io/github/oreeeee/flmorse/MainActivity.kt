@@ -128,18 +128,18 @@ class MainActivity : AppCompatActivity() {
                 when(character) {
                     '.' -> {
                         cameraManager.setTorchMode(cameraId, true)
-                        SystemClock.sleep(100)
+                        SystemClock.sleep(200)
                         cameraManager.setTorchMode(cameraId, false)
-                        SystemClock.sleep(100)
+                        SystemClock.sleep(200)
                     }
                     '-' -> {
                         cameraManager.setTorchMode(cameraId, true)
-                        SystemClock.sleep(300)
+                        SystemClock.sleep(600)
                         cameraManager.setTorchMode(cameraId, false)
-                        SystemClock.sleep(100)
+                        SystemClock.sleep(200)
                     }
-                    ' ' -> SystemClock.sleep(300)
-                    '/' -> SystemClock.sleep(700)
+                    ' ' -> SystemClock.sleep(600)
+                    '/' -> SystemClock.sleep(1200)
                 }
             }
             tvRepeatedTimes.text = "Repeated $i times"
