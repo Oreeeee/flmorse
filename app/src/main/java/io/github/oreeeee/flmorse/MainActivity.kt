@@ -37,57 +37,54 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun convertTextToMorse(textToConvert: String): String {
-        var stringInMorse = ""
-        val textToConvert: String = textToConvert.lowercase()
+        var stringInMorse: String = ""
 
-        textToConvert.forEach { character ->
+        textToConvert.uppercase().forEach { character ->
             // Long when statement incoming!
             when(character) {
                 // Letters
-                'a' -> stringInMorse + ".-"
-                'b' -> stringInMorse + "-..."
-                'c' -> stringInMorse + "-.-."
-                'd' -> stringInMorse + "-.."
-                'e' -> stringInMorse + "."
-                'f' -> stringInMorse + "..-."
-                'g' -> stringInMorse + "--."
-                'h' -> stringInMorse + "...."
-                'i' -> stringInMorse + ".."
-                'j' -> stringInMorse + ".---"
-                'k' -> stringInMorse + "-.-"
-                'l' -> stringInMorse + ".-.."
-                'm' -> stringInMorse + "--"
-                'n' -> stringInMorse + "-."
-                'o' -> stringInMorse + "---"
-                'p' -> stringInMorse + ".--."
-                'q' -> stringInMorse + "--.-"
-                'r' -> stringInMorse + ".-."
-                's' -> stringInMorse + "..."
-                't' -> stringInMorse + "-"
-                'u' -> stringInMorse + "..-"
-                'v' -> stringInMorse + "...-"
-                'w' -> stringInMorse + ".--"
-                'x' -> stringInMorse + "-..-"
-                'y' -> stringInMorse + "-.--"
-                'z' -> stringInMorse + "--.."
+                'A' -> stringInMorse += ".- "
+                'B' -> stringInMorse += "-... "
+                'C' -> stringInMorse += "-.-. "
+                'D' -> stringInMorse += "-.. "
+                'E' -> stringInMorse += ". "
+                'F' -> stringInMorse += "..-. "
+                'G' -> stringInMorse += "--. "
+                'H' -> stringInMorse += ".... "
+                'I' -> stringInMorse += ".. "
+                'J' -> stringInMorse += ".--- "
+                'K' -> stringInMorse += "-.- "
+                'L' -> stringInMorse += ".-.. "
+                'M' -> stringInMorse += "-- "
+                'N' -> stringInMorse += "-. "
+                'O' -> stringInMorse += "--- "
+                'P' -> stringInMorse += ".--. "
+                'Q' -> stringInMorse += "--.- "
+                'R' -> stringInMorse += ".-. "
+                'S' -> stringInMorse += "... "
+                'T' -> stringInMorse += "- "
+                'U' -> stringInMorse += "..- "
+                'V' -> stringInMorse += "...- "
+                'W' -> stringInMorse += ".-- "
+                'X' -> stringInMorse += "-..- "
+                'Y' -> stringInMorse += "-.-- "
+                'Z' -> stringInMorse += "--.. "
 
                 // Numbers
-                '1' -> stringInMorse + ".----"
-                '2' -> stringInMorse + "..---"
-                '3' -> stringInMorse + "...--"
-                '4' -> stringInMorse + "....-"
-                '5' -> stringInMorse + "....."
-                '6' -> stringInMorse + "-...."
-                '7' -> stringInMorse + "--..."
-                '8' -> stringInMorse + "---.."
-                '9' -> stringInMorse + "----."
-                '0' -> stringInMorse + "-----"
+                '1' -> stringInMorse += ".---- "
+                '2' -> stringInMorse += "..--- "
+                '3' -> stringInMorse += "...-- "
+                '4' -> stringInMorse += "....- "
+                '5' -> stringInMorse += "..... "
+                '6' -> stringInMorse += "-.... "
+                '7' -> stringInMorse += "--... "
+                '8' -> stringInMorse += "---.. "
+                '9' -> stringInMorse += "----. "
+                '0' -> stringInMorse += "----- "
 
-                ' ' -> stringInMorse + " "
+                ' ' -> stringInMorse += "/"
 
                 else -> Log.i("MainActivity", "Unsupported character given, skipping... TODO: Replace this with some kind of popup.")
-
-                // I wrote everything by hand in here from a Wikipedia article
             }
         }
 
@@ -101,15 +98,18 @@ class MainActivity : AppCompatActivity() {
             when(character) {
                 '.' -> {
                     cameraManager.setTorchMode(cameraId, true)
-                    SystemClock.sleep(50)
+                    SystemClock.sleep(100)
                     cameraManager.setTorchMode(cameraId, false)
+                    SystemClock.sleep(100)
                 }
                 '-' -> {
                     cameraManager.setTorchMode(cameraId, true)
-                    SystemClock.sleep(150)
+                    SystemClock.sleep(300)
                     cameraManager.setTorchMode(cameraId, false)
+                    SystemClock.sleep(100)
                 }
-                ' ' -> SystemClock.sleep(50)
+                ' ' -> SystemClock.sleep(300)
+                '/' -> SystemClock.sleep(700)
             }
         }
 
