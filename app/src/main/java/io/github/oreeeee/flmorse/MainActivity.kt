@@ -10,11 +10,15 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import kotlinx.coroutines.delay
+import java.lang.Exception
+import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
     private lateinit var cameraManager: CameraManager
     private lateinit var cameraId: String
+
     private lateinit var etUserText: EditText
     private lateinit var btnFlash: Button
 
@@ -32,7 +36,11 @@ class MainActivity : AppCompatActivity() {
         //cameraManager.setTorchMode(cameraId, true)
 
         btnFlash.setOnClickListener {
-            flashMorse(convertTextToMorse(etUserText.text.toString()))
+            try {
+                flashMorse(convertTextToMorse(etUserText.text.toString()))
+            } catch(e: IllegalArgumentException) {
+                noFlashlightDialog()
+            }
         }
     }
 
@@ -113,5 +121,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun noFlashlightDialog() {
+        val dialogToShow = AlertDialog.Builder(this)
+
+        dialogToShow.setTitle("Error")
+        dialogToShow.setMessage("Flashlight not detected! If this is a mistake, submit an issue on GitHub.")
+
+        dialogToShow.setPositiveButton("Ok") { dialog, which ->
+            exitProcess(status=0)
+        }
+
+        dialogToShow.show()
     }
 }
