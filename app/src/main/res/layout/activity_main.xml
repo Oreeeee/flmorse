@@ -10,10 +10,12 @@
         android:id="@+id/etUserText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-10dp"
+        android:layout_marginTop="-40dp"
+        android:height="48dp"
         android:ems="15"
         android:hint="What should the morse code be?"
         android:inputType="textFilter"
+        android:minHeight="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,9 +25,48 @@
         android:id="@+id/btnFlash"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="60dp"
         android:text="FLASH THE MORSE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etUserText" />
+
+    <SeekBar
+        android:id="@+id/sbRepeatCount"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:max="9"
+        app:layout_constraintStart_toEndOf="@+id/tvHowMany"
+        app:layout_constraintTop_toTopOf="@+id/tvHowMany" />
+
+    <TextView
+        android:id="@+id/tvHowMany"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="Repeats"
+        app:layout_constraintStart_toStartOf="@+id/etUserText"
+        app:layout_constraintTop_toBottomOf="@+id/etUserText" />
+
+    <TextView
+        android:id="@+id/tvRepeatCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toEndOf="@+id/sbRepeatCount"
+        app:layout_constraintTop_toTopOf="@+id/sbRepeatCount"
+        tools:text="5" />
+
+    <TextView
+        android:id="@+id/tvRepeatedTimes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintEnd_toEndOf="@+id/btnFlash"
+        app:layout_constraintStart_toStartOf="@+id/btnFlash"
+        app:layout_constraintTop_toBottomOf="@+id/btnFlash"
+        tools:text="Repeated 2 times" />
 </androidx.constraintlayout.widget.ConstraintLayout>

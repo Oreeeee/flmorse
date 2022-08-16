@@ -9,6 +9,8 @@ import android.os.SystemClock
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.SeekBar
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import kotlinx.coroutines.delay
@@ -21,6 +23,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var etUserText: EditText
     private lateinit var btnFlash: Button
+    private lateinit var sbRepeatCount: SeekBar
+    private lateinit var tvRepeatCount: TextView
+    private lateinit var tvRepeatedTimes: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,16 +33,32 @@ class MainActivity : AppCompatActivity() {
 
         etUserText = findViewById(R.id.etUserText)
         btnFlash = findViewById(R.id.btnFlash)
+        sbRepeatCount = findViewById(R.id.sbRepeatCount)
+        tvRepeatCount = findViewById(R.id.tvRepeatCount)
+        tvRepeatedTimes = findViewById(R.id.tvRepeatedTimes)
 
         // Initialize flashlight
         cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
         cameraId = cameraManager.cameraIdList[0]
 
-        //cameraManager.setTorchMode(cameraId, true)
+        tvRepeatCount.text = "1"
+
+        var repeatCountValue: Int
+        sbRepeatCount.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                repeatCountValue = seekBar.progress + 1
+                tvRepeatCount.text = "$repeatCountValue"
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {}
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {}
+
+        })
 
         btnFlash.setOnClickListener {
             try {
-                flashMorse(convertTextToMorse(etUserText.text.toString()))
+                flashMorse(convertTextToMorse(etUserText.text.toString()), sbRepeatCount.progress + 1)
             } catch(e: IllegalArgumentException) {
                 noFlashlightDialog()
             }
@@ -101,26 +122,28 @@ class MainActivity : AppCompatActivity() {
         return stringInMorse
     }
 
-    private fun flashMorse(stringToMorse: String) {
-        stringToMorse.forEach { character ->
-            when(character) {
-                '.' -> {
-                    cameraManager.setTorchMode(cameraId, true)
-                    SystemClock.sleep(100)
-                    cameraManager.setTorchMode(cameraId, false)
-                    SystemClock.sleep(100)
+    private fun flashMorse(stringToMorse: String, timesToRepeat: Int) {
+        for(i in 1..timesToRepeat) {
+            stringToMorse.forEach { character ->
+                when(character) {
+                    '.' -> {
+                        cameraManager.setTorchMode(cameraId, true)
+                        SystemClock.sleep(100)
+                        cameraManager.setTorchMode(cameraId, false)
+                        SystemClock.sleep(100)
+                    }
+                    '-' -> {
+                        cameraManager.setTorchMode(cameraId, true)
+                        SystemClock.sleep(300)
+                        cameraManager.setTorchMode(cameraId, false)
+                        SystemClock.sleep(100)
+                    }
+                    ' ' -> SystemClock.sleep(300)
+                    '/' -> SystemClock.sleep(700)
                 }
-                '-' -> {
-                    cameraManager.setTorchMode(cameraId, true)
-                    SystemClock.sleep(300)
-                    cameraManager.setTorchMode(cameraId, false)
-                    SystemClock.sleep(100)
-                }
-                ' ' -> SystemClock.sleep(300)
-                '/' -> SystemClock.sleep(700)
             }
+            tvRepeatedTimes.text = "Repeated $i times"
         }
-
     }
 
     private fun noFlashlightDialog() {
