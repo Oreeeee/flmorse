@@ -2,19 +2,18 @@ package io.github.oreeeee.flmorse
 
 import android.content.Context
 import android.hardware.camera2.CameraManager
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.SystemClock
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import java.lang.Exception
+import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
@@ -58,7 +57,7 @@ class MainActivity : AppCompatActivity() {
 
         btnFlash.setOnClickListener {
             try {
-                flashMorse(convertTextToMorse(etUserText.text.toString()), sbRepeatCount.progress + 1)
+                GlobalScope.launch { flashMorse(convertTextToMorse(etUserText.text.toString()), sbRepeatCount.progress + 1) }
             } catch(e: IllegalArgumentException) {
                 noFlashlightDialog()
             }
@@ -122,27 +121,33 @@ class MainActivity : AppCompatActivity() {
         return stringInMorse
     }
 
-    private fun flashMorse(stringToMorse: String, timesToRepeat: Int) {
+    private suspend fun flashMorse(stringToMorse: String, timesToRepeat: Int) {
         for(i in 1..timesToRepeat) {
             stringToMorse.forEach { character ->
                 when(character) {
                     '.' -> {
                         cameraManager.setTorchMode(cameraId, true)
-                        SystemClock.sleep(100)
+                        delay(100L)
+                        //SystemClock.sleep(100)
                         cameraManager.setTorchMode(cameraId, false)
-                        SystemClock.sleep(100)
+                        //SystemClock.sleep(100)
+                        delay(100L)
                     }
                     '-' -> {
                         cameraManager.setTorchMode(cameraId, true)
-                        SystemClock.sleep(300)
+                        //SystemClock.sleep(300)
+                        delay(300L)
                         cameraManager.setTorchMode(cameraId, false)
-                        SystemClock.sleep(100)
+                        //SystemClock.sleep(100)
+                        delay(100L)
                     }
-                    ' ' -> SystemClock.sleep(300)
-                    '/' -> SystemClock.sleep(700)
+                    ' ' -> /* SystemClock.sleep(300) */ delay(300L)
+                    '/' -> /* SystemClock.sleep(700) */ delay(700L)
                 }
             }
-            tvRepeatedTimes.text = "Repeated $i times"
+            GlobalScope.launch(Dispatchers.Main) {
+                tvRepeatedTimes.text = "Repeated $i times"
+            }
         }
     }
 
