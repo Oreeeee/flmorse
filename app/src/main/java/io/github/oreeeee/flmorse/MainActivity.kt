@@ -10,10 +10,7 @@ import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +23,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvRepeatCount: TextView
     private lateinit var tvRepeatedTimes: TextView
 
+    private lateinit var flashingJob: Job
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -35,6 +34,8 @@ class MainActivity : AppCompatActivity() {
         sbRepeatCount = findViewById(R.id.sbRepeatCount)
         tvRepeatCount = findViewById(R.id.tvRepeatCount)
         tvRepeatedTimes = findViewById(R.id.tvRepeatedTimes)
+
+        var isFlashingJobRunning = false
 
         // Initialize flashlight
         cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
@@ -55,9 +56,20 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+        btnFlash.text = "FLASH"
+
         btnFlash.setOnClickListener {
             try {
-                GlobalScope.launch { flashMorse(convertTextToMorse(etUserText.text.toString()), sbRepeatCount.progress + 1) }
+                if (isFlashingJobRunning == false) {
+                    flashingJob = GlobalScope.launch { flashMorse(convertTextToMorse(etUserText.text.toString()), sbRepeatCount.progress + 1) }
+                    btnFlash.text = "Cancel"
+                    isFlashingJobRunning = true
+                } else {
+                    flashingJob.cancel()
+                    cameraManager.setTorchMode(cameraId, false)
+                    btnFlash.text = "FLASH"
+                    isFlashingJobRunning = false
+                }
             } catch(e: IllegalArgumentException) {
                 noFlashlightDialog()
             }
@@ -148,6 +160,10 @@ class MainActivity : AppCompatActivity() {
             GlobalScope.launch(Dispatchers.Main) {
                 tvRepeatedTimes.text = "Repeated $i times"
             }
+        }
+
+        GlobalScope.launch(Dispatchers.Main) {
+            btnFlash.text = "FLASH"
         }
     }
 
